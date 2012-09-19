@@ -5,6 +5,14 @@ import time
 import datetime
 import logging
 
+'''
+This script starts up our dev server every morning at 7am and shuts
+it down again at 7pm. Here is an example cron entry that runs the
+script on weekdays at 7am and 7pm:
+
+00 07,19 * * 1,2,3,4,5 /usr/bin/python /path/to/startstop.py
+'''
+
 dev_id = 'i-5a18ab20'
 dev_ip = '23.21.175.158'
 
