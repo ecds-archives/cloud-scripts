@@ -19,7 +19,7 @@ dev_id = 'i-5a18ab20'
 dev_ip = '23.21.175.158'
 
 # Setup logging
-logging.basicConfig(filename='startstop.log',level=logging.INFO)
+logging.basicConfig(filename='/var/root/cloud-scripts/startstop.log',level=logging.INFO)
 
 # Make our connection to the EC2 API. boto looks for our API
 # key pair in ~/.boto
