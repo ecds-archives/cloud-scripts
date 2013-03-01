@@ -48,7 +48,7 @@ if now.hour == 7:
 	for i in instances:
 		if i.id == dev_id:
 			status = i.update()
-			while status == 'pending':
+			while status != 'running':
 				logging.info('Waiting for instance to start')
 				time.sleep(10)
 				status = i.update()
