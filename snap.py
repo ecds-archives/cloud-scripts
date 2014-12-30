@@ -4,20 +4,29 @@ import boto
 from datetime import date, datetime, timedelta
 import logging
 
-tags = ['Prod', 'Dev', 'Puppet']
+# Array for tags
+tags = ['Prod', 'Dev', 'beck-dev', 'PuppetMaster', 'Pitts', 'HBCUTours']
 
-logging.basicConfig(filename='/var/root/cloud-scripts/snap.log',level=logging.INFO)
+# Set up some logging
+logging.basicConfig(filename='/var/root/cloud-scripts/snap.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
+# Datetime objet
 now = datetime.now()
 
+# We want to keep 30 days worth of Prod snapshots but only 15 days
+# of everything else. Here is where we calculate 30 days ago.
 last_month = date.today() - timedelta(days=30)
 
+# And here is where we calculate 15 days ago.
 two_weeks_back = date.today() - timedelta(days=15)
 
-logging.info(now.strftime("%Y-%m-%d %H:%M"))
+# Start logging.
+logging.info('Starting ' + now.strftime("%Y-%m-%d %H:%M"))
 
+# Connect to the AWS API
 ec2 = boto.connect_ec2()
 
+# A function that finds the old snapshots and deletes them.
 def delete_old_snaps(tag_name, old_date):
 	old_snaps = ec2.get_all_snapshots(filters={'tag:Name': tag_name + ' ' + str(old_date) })
 
@@ -25,6 +34,10 @@ def delete_old_snaps(tag_name, old_date):
 		logging.info('Deleteing ' + tag_name + ' ' + str(old_date) + ' ' + str(old_snap))
 		old_snap.delete()
 
+# This all assumes that the volumes are tagged with a name that is in the arrary "tags".
+# This will iterate through the tags we specify, find the volumes that match and take
+# an EBS snapshot of the volume. The resulting snapshot will be tagged with the name
+# and the date in YYYY-MM-DD format.
 for tag in tags:
 	logging.info('Taking snaphshot of ' + tag)
 
