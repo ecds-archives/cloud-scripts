@@ -1,7 +1,10 @@
-cloud-scripts
-=============
+CloudScripts
+============
 
-Repository for our various various scripts used for managing cloud servers and deployment of digital scholarship projects.
+Collection of scripts to mange AWS resources by starting and stopping instances and taking EBS snapshots of EBS volumes.
+
+Repuirments
+-----------
 
 The scripts require the Boto Python library.
 
@@ -16,7 +19,20 @@ In the home directory of the user that will run the scripts, crerate a file call
     [Boto]
     http_socket_timeout = 5
 
+startstop.py
+------------
+
+This script has a list of EC2 instance IDs. It will start each instance at 7am and attach its Elastic IP. The script will stop each in the list instance at 7pm.
+
+snap.py
+-------
+
+This script takes EBS snapshots (block level incremental backup) based on volume tags. Production level snapshots are retained for one month. Development level snapshots are retained for two weeks.
+
+Crontab Example
+--------------- 
+
 Here are the cron jobs used to run the scripts. Note the startstop.py does not run on the weekends.
 
-    00 07,19 * * 1,2,3,4,5 /usr/bin/python /var/root/cloud-scripts/startstop.py
-    00 22 * * * /usr/bin/python /var/root/cloud-scripts/snap.py
+    00 07,19 * * 1,2,3,4,5 /usr/bin/python /path/to/startstop.py
+    00 22 * * * /usr/bin/python /path/to/snap.py
